@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sync - Ultimate Roblox Utility</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+
+        :root {
+            --primary: #00FFFF;
+            --secondary: #0080FF;
+            --background: #050505;
+            --surface: #0A0A0A;
+            --text: #FFFFFF;
+            --text-secondary: #B0B0B0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--background);
+            color: var(--text);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        header {
+            position: fixed;
+            width: 100%;
+            z-index: 1000;
+            padding: 20px 0;
+            background: rgba(5, 5, 5, 0.8);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-links a {
+            color: var(--text);
+            text-decoration: none;
+            margin-left: 30px;
+            font-weight: 400;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            transform: scaleX(0);
+            transform-origin: right;
+            transition: transform 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            transform: scaleX(1);
+            transform-origin: left;
+        }
+
+        .hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 20%, rgba(0, 255, 255, 0.1) 0%, transparent 25%),
+                radial-gradient(circle at 80% 80%, rgba(0, 128, 255, 0.1) 0%, transparent 25%);
+            filter: blur(50px);
+            animation: backgroundPulse 10s infinite alternate;
+        }
+
+        @keyframes backgroundPulse {
+            0% { opacity: 0.5; }
+            100% { opacity: 0.8; }
+        }
+
+        h1 {
+            font-size: 5rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            position: relative;
+        }
+
+        .hero p {
+            font-size: 1.5rem;
+            margin-bottom: 30px;
+            font-weight: 300;
+            color: var(--text-secondary);
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            color: var(--background);
+            padding: 15px 30px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-button::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, transparent 70%);
+            transform: scale(0);
+            transition: transform 0.5s ease-out;
+        }
+
+        .cta-button:hover::before {
+            transform: scale(1);
+        }
+
+        .section {
+            padding: 100px 0;
+            position: relative;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 3rem;
+            margin-bottom: 50px;
+            color: var(--primary);
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            width: 50px;
+            height: 2px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            transform: translateX(-50%);
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .feature {
+            background: var(--surface);
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            z-index: -1;
+            filter: blur(10px);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .feature:hover::before {
+            opacity: 1;
+        }
+
+        .feature h2 {
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+
+        .feature p {
+            color: var(--text-secondary);
+        }
+
+        .comparison {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            margin-top: 50px;
+        }
+
+        .comparison-item {
+            text-align: center;
+            flex: 1;
+        }
+
+        .comparison-chart {
+            width: 200px;
+            height: 200px;
+            margin: 0 auto 20px;
+            position: relative;
+        }
+
+        .comparison-circle {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: conic-gradient(var(--primary) 0deg, var(--surface) 0deg);
+            transition: all 1.5s ease-out;
+        }
+
+        .comparison-percentage {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 2rem;
+            font-weight: 700;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .comparison-label {
+            color: var(--text-secondary);
+            font-size: 1.2rem;
+            margin-top: 10px;
+        }
+
+        .loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--background);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+        }
+
+        .loader.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .loader svg {
+            width: 100px;
+            height: 100px;
+        }
+
+        .loader-circle {
+            fill: none;
+            stroke: var(--primary);
+            stroke-width: 4;
+            stroke-dasharray: 283;
+            stroke-dashoffset: 283;
+            animation: circleAnimation 2s ease-in-out infinite, rotateAnimation 2s linear infinite;
+            transform-origin: center;
+        }
+
+        .loader-text {
+            font-family: 'Poppins', sans-serif;
+            font-size: 16px;
+            fill: var(--text);
+            opacity: 0;
+            animation: fadeInOut 2s ease-in-out infinite;
+        }
+
+        @keyframes circleAnimation {
+            0% { stroke-dashoffset: 283; }
+            50% { stroke-dashoffset: 0; }
+            100% { stroke-dashoffset: -283; }
+        }
+
+        @keyframes rotateAnimation {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes fadeInOut {
+            0%, 100% { opacity: 0; }
+            50% { opacity: 1; }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .fade-in {
+            opacity: 0;
+            animation: fadeInUp 0.6s ease-out forwards;
+        }
+
+        .delay-1 { animation-delay: 0.2s; }
+        .delay-2 { animation-delay: 0.4s; }
+        .delay-3 { animation-delay: 0.6s; }
+    </style>
+</head>
+<body>
+    <div class="loader">
+        <svg viewBox="0 0 100 100">
+            <circle class="loader-circle" cx="50" cy="50" r="45"/>
+            <text class="loader-text" x="50" y="55" text-anchor="middle">SYNC</text>
+        </svg>
+    </div>
+    <header>
+        <div class="container">
+            <nav>
+                <div class="logo">Sync</div>
+                <div class="nav-links">
+               <a href="sync.html">Home</a>
+                   <a href="syncpurchase.html">Purchase</a>
+                       ><a href="syncprices.html">Prices</a>
+                            <a href="syncrawdata.html">Raw Data</a>
+                               <a href="syncprofile.html">Profile</a>
+                </div>
+            </nav>
+        </div>
+    </header>
+    <main>
+        <section class="hero">
+            <div class="hero-background"></div>
+            <div class="hero-content">
+                <h1 class="fade-in">Sync</h1>
+                <p class="fade-in delay-1">Redefine Your Roblox Exploiting Experience.</p>
+                <a href="#" class="cta-button fade-in delay-2">Get Started</a>
+            </div>
+        </section>
+        <section id="features" class="section">
+            <div class="container">
+                <h2 class="section-title fade-in">Sync Advanced Features</h2>
+                <div class="features-grid">
+                    <div class="feature fade-in">
+                        <h2>Fast Injection Speed</h2>
+                        <p>Experience Injections at the fastest speeds.</p>
+                    </div>
+                 
+                    <div class="feature fade-in delay-2">
+                        <h2>Modern Advanced Interface</h2>
+                        <p>Exploit in style with syncs clean interface.</p>
+                    </div>
+
+                    <div class="feature fade-in delay-2">
+                        <h2>Undetected</h2>
+                        <p>Exploit, while not worrying about byfron.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section id="comparison" class="section">
+            <div class="container">
+                <h2 class="section-title fade-in">Our Performance Vs Others</h2>
+                <div class="comparison">
+                    <div class="comparison-item fade-in">
+                        <div class="comparison-chart">
+                            <div class="comparison-circle"></div>
+                            <div class="comparison-percentage">0%</div>
+                        </div>
+                        <div class="comparison-label">Sync Performance</div>
+                    </div>
+                    <div class="comparison-item fade-in delay-1">
+                        <div class="comparison-chart">
+                            <div class="comparison-circle"></div>
+                            <div class="comparison-percentage">0%</div>
+                        </div>
+                        <div class="comparison-label">Other Competetiors Performance</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+          
+            document.querySelector('main').style.opacity = '0';
+            document.querySelector('header').style.opacity = '0';
+
+            
+            const loader = document.querySelector('.loader');
+            loader.style.display = 'flex';
+
+          
+            setTimeout(() => {
+                
+                loader.classList.add('hidden');
+
+                
+                setTimeout(() => {
+                    document.querySelector('main').style.opacity = '1';
+                    document.querySelector('header').style.opacity = '1';
+                    document.querySelector('main').style.transition = 'opacity 0.5s ease';
+                    document.querySelector('header').style.transition = 'opacity 0.5s ease';
+
+                   
+                    animateComparison();
+                    initializeObserver();
+                }, 500); 
+            }, 2500); 
+        });
+
+        function animateComparison() {
+            const charts = document.querySelectorAll('.comparison-circle');
+            const percentages = document.querySelectorAll('.comparison-percentage');
+            
+            const syncFinal = 100;
+            const competitorFinal = 70;
+            
+            animateChart(charts[0], percentages[0], syncFinal, 'var(--primary)');
+            setTimeout(() => {
+                animateChart(charts[1], percentages[1], competitorFinal, 'var(--secondary)');
+            }, 500);
+        }
+
+        function animateChart(chart, percentage, finalValue, color) {
+            let currentValue = 0;
+            const duration = 1500;
+            const interval = 10;
+            const steps = duration / interval;
+            const increment = finalValue / steps;
+
+            const animation = setInterval(() => {
+                currentValue += increment;
+                                const roundedValue = Math.round(currentValue);
+                const degree = (currentValue / 100) * 360;
+                chart.style.background = `conic-gradient(${color} ${degree}deg, var(--surface) ${degree}deg)`;
+                percentage.textContent = `${roundedValue}%`;
+
+                if (currentValue >= finalValue) {
+                    clearInterval(animation);
+                    percentage.style.opacity = '1'; 
+                }
+            }, interval);
+        }
+
+        function initializeObserver() {
+            const observer = new IntersectionObserver(entries => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('fade-in');
+                        observer.unobserve(entry.target); 
+                    }
+                });
+            });
+
+            document.querySelectorAll('.fade-in').forEach(element => {
+                observer.observe(element);
+            });
+        }
+
+       
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        
+        window.addEventListener('scroll', () => {
+            const header = document.querySelector('header');
+            if (window.scrollY > 50) {
+                header.style.background = 'rgba(5, 5, 5, 0.8)';
+            } else {
+                header.style.background = 'rgba(5, 5, 5, 0.8)';
+            }
+        });
+    </script>
+</body>
+</html>

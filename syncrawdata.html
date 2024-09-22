@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sync - Raw Data</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+
+        :root {
+            --primary: #00FFFF;
+            --secondary: #0080FF;
+            --background: #050505;
+            --surface: #0A0A0A;
+            --text: #FFFFFF;
+            --text-secondary: #747474;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--background);
+            color: var(--text);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            background: rgba(5, 5, 5, 0.8);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        nav a {
+            color: var(--text);
+            text-decoration: none;
+            margin-left: 20px;
+            transition: color 0.3s ease;
+        }
+
+        nav a:hover {
+            color: var(--primary);
+        }
+
+        .hero {
+            height: 50vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 40px;
+        }
+
+        .hero-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 20%, rgba(0, 255, 255, 0.1) 0%, transparent 25%),
+                radial-gradient(circle at 80% 80%, rgba(0, 128, 255, 0.1) 0%, transparent 25%);
+            filter: blur(50px);
+            animation: backgroundPulse 10s infinite alternate;
+        }
+
+        @keyframes backgroundPulse {
+            0% { opacity: 0.5; }
+            100% { opacity: 0.8; }
+        }
+
+        .hero-content {
+            text-align: center;
+            z-index: 1;
+        }
+
+        .hero h1 {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .raw-data-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .raw-data-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .create-button {
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            color: var(--background);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            font-weight: 600;
+        }
+
+        .create-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 255, 255, 0.3);
+        }
+
+        .search-container {
+            display: flex;
+            margin-bottom: 20px;
+            background: var(--surface);
+            border-radius: 5px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .search-input {
+            flex-grow: 1;
+            padding: 12px 20px;
+            border: none;
+            background: transparent;
+            color: var(--text);
+            font-size: 1rem;
+        }
+
+        .search-input::placeholder {
+            color: var(--text-secondary);
+        }
+
+        .search-button {
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            color: var(--background);
+            border: none;
+            padding: 12px 25px;
+            cursor: pointer;
+            transition: opacity 0.3s ease;
+            font-weight: 600;
+        }
+
+        .search-button:hover {
+            opacity: 0.9;
+        }
+
+        .data-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+        }
+
+        .data-card {
+            background: var(--surface);
+            border-radius: 10px;
+            padding: 25px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .data-card::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            z-index: -1;
+            filter: blur(10px);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .data-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 255, 255, 0.1);
+        }
+
+        .data-card:hover::before {
+            opacity: 1;
+        }
+
+        .data-card h3 {
+            font-size: 1.4rem;
+            margin-bottom: 10px;
+            color: var(--primary);
+        }
+
+        .data-card p {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: 15px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+        }
+
+        .user-avatar {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            margin-right: 10px;
+        }
+
+        .user-name {
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .card-options {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    z-index: 20; /* Increase this value to be higher than the approval overlay */
+}
+
+        .card-options button {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: color 0.3s ease;
+            font-size: 1.5rem;
+        }
+
+        .card-options button:hover {
+            color: var(--primary);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1001;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background-color: var(--surface);
+            margin: 10% auto;
+            padding: 30px;
+            border-radius: 10px;
+            width: 50%;
+            max-width: 500px;
+            box-shadow: 0 4px 20px rgba(0, 255, 255, 0.2);
+        }
+
+        .close {
+            color: var(--text-secondary);
+            float: right;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: var(--primary);
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .form-group input[type="text"],
+        .form-group textarea {
+            width: calc(100% - 22px);
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            background: var(--background);
+            color: var(--text);
+            font-size: 1rem;
+            margin-bottom: 10px;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+        }
+
+        .form-group button {
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            color: var(--background);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            font-weight: 600;
+        }
+
+        .form-group button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 255, 255, 0.3);
+        }
+
+        .approval-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.8);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            z-index: 10;
+        }
+
+        .approval-overlay img {
+            width: 50px;
+            height: 50px;
+            margin-bottom: 10px;
+        }
+        .dropdown-menu {
+            position: absolute;
+            right: 0;
+            top: 100%;
+            background-color: #1a1a1a;
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+            overflow: hidden;
+            width: 200px;
+            z-index: 1000;
+            opacity: 0;
+            transform: translateY(-10px);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            pointer-events: none;
+        }
+
+        .dropdown-menu.show {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
+        }
+
+        .dropdown-menu button {
+            display: block;
+            width: 100%;
+            padding: 10px 15px;
+            text-align: left;
+            background: none;
+            border: none;
+            color: var(--text);
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.2s;
+            font-weight: bold;
+        }
+
+        .dropdown-menu .option-description {
+            display: block;
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-top: 2px;
+            font-weight: normal;
+        }
+
+        @keyframes fadeOutAndSlideUp {
+            from {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            to {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+        }
+
+        @keyframes fadeOutAndSlideUp {
+            from {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            to {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+        }
+
+
+        .notification {
+            position: fixed;
+            bottom: 20px;
+            right: -300px;
+            background-color: rgb(0, 161, 0);
+            color: var(--text);
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            display: flex;
+            align-items: center;
+            transition: right 0.3s ease-out;
+            z-index: 1000;
+        }
+
+        .notification.show {
+            right: 20px;
+        }
+
+        .notification img {
+            width: 24px;
+            height: 24px;
+            margin-right: 10px;
+        }
+
+        @keyframes fadeOut {
+            from { opacity: 1; }
+            to { opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">Sync</div>
+        <nav>
+            <a href="#">Home</a>
+            <a href="#">About</a>
+            <a href="#">Contact</a>
+        </nav>
+    </header>
+
+    <div class="hero">
+        <div class="hero-background"></div>
+        <div class="hero-content">
+            <h1>Raw Data</h1>
+            <p>Manage your data efficiently with our intuitive UI.</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="raw-data-header">
+            <div class="raw-data-title">Your Data</div>
+            <button class="create-button" id="createButton">Upload Script</button>
+        </div>
+
+        <div class="search-container">
+            <input type="text" class="search-input" placeholder="Search...">
+            <button class="search-button">Search</button>
+        </div>
+
+        <div class="data-grid" id="dataGrid">
+            <!-- Data cards will be dynamically added here -->
+        </div>
+    </div>
+
+    <!-- The Modal -->
+    <div id="uploadModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <div class="form-group">
+                <label for="scriptTitle">Script Title</label>
+                <input type="text" id="scriptTitle">
+            </div>
+            <div class="form-group">
+                <label for="scriptDescription">Script Description</label>
+                <textarea id="scriptDescription" rows="4"></textarea>
+            </div>
+            <div class="form-group">
+                <button id="saveScript">Save Script</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+document.addEventListener('DOMContentLoaded', function () {
+    const createButton = document.getElementById('createButton');
+    const uploadModal = document.getElementById('uploadModal');
+    const closeModal = document.querySelector('.modal .close');
+    const saveScriptButton = document.getElementById('saveScript');
+    const dataGrid = document.getElementById('dataGrid');
+
+    createButton.addEventListener('click', () => {
+        uploadModal.style.display = 'block';
+    });
+
+    closeModal.addEventListener('click', () => {
+        uploadModal.style.display = 'none';
+    });
+
+    window.addEventListener('click', (event) => {
+        if (event.target == uploadModal) {
+            uploadModal.style.display = 'none';
+        }
+    });
+
+    saveScriptButton.addEventListener('click', () => {
+        const scriptTitle = document.getElementById('scriptTitle').value;
+        const scriptDescription = document.getElementById('scriptDescription').value;
+
+        if (scriptTitle && scriptDescription) {
+            const newCard = createDataCard(scriptTitle, scriptDescription);
+            dataGrid.appendChild(newCard);
+            uploadModal.style.display = 'none';
+
+        
+            document.getElementById('scriptTitle').value = '';
+            document.getElementById('scriptDescription').value = '';
+        }
+    });
+
+    function createDataCard(scriptTitle, scriptDescription) {
+        const newCard = document.createElement('div');
+        newCard.classList.add('data-card');
+        const scriptId = Math.floor(Math.random() * 1000000); 
+        newCard.innerHTML = `
+            <div class="approval-overlay">
+                <img src="syncmedia/Error.png" alt="Warning Icon">
+                <span>Waiting For Approval</span>
+            </div>
+            <div class="card-options">
+                <button class="options-button">••••</button>
+                <div class="dropdown-menu">
+                    <button class="send-to-socket-btn">
+                        Send to Socket
+                        <span class="option-description">Send script to the websocket localhost</span>
+                    </button>
+                    <button class="execute-btn">
+                        Execute
+                        <span class="option-description">Execute script to Roblox</span>
+                    </button>
+                </div>
+            </div>
+            <h3>${scriptTitle}</h3>
+            <p>${scriptDescription}</p>
+            <div class="user-info">
+                <div class="user-avatar"></div>
+                <span class="user-name">Username</span>
+            </div>
+        `;
+
+       
+        const optionsButton = newCard.querySelector('.options-button');
+        const dropdownMenu = newCard.querySelector('.dropdown-menu');
+        const sendToSocketBtn = newCard.querySelector('.send-to-socket-btn');
+        const executeBtn = newCard.querySelector('.execute-btn');
+
+        optionsButton.addEventListener('click', (e) => {
+            e.stopPropagation();
+            dropdownMenu.classList.toggle('show');
+        });
+
+        sendToSocketBtn.addEventListener('click', () => {
+            showNotification('Script sent to Socket', 'send');
+            dropdownMenu.classList.remove('show');
+        });
+
+        executeBtn.addEventListener('click', () => {
+            showNotification('Script Execution Started', 'execute');
+            dropdownMenu.classList.remove('show');
+        });
+
+        document.addEventListener('click', () => {
+            dropdownMenu.classList.remove('show');
+        });
+
+        return newCard;
+    }
+
+    function showNotification(message, type) {
+        const notification = document.createElement('div');
+        notification.classList.add('notification', `notification-${type}`);
+        notification.innerHTML = `
+            <img src="syncmedia/Checkmark.png" alt="${type} icon">
+            <span>${message}</span>
+        `;
+        document.body.appendChild(notification);
+        
+        setTimeout(() => {
+            notification.classList.add('show');
+        }, 100);
+
+        setTimeout(() => {
+            notification.classList.remove('show');
+            notification.addEventListener('transitionend', () => {
+                notification.remove();
+            });
+        }, 2000);
+    }
+});
+</script>

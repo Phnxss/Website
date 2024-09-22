@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sync - Choose Your Plan</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+
+        :root {
+            --primary: #00FFFF;
+            --secondary: #0080FF;
+            --background: #030303;
+            --surface: #080808;
+            --text: #FFFFFF;
+            --text-secondary: #A0A0A0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--background);
+            color: var(--text);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 120px 20px 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        header {
+            background: rgba(3, 3, 3, 0.8);
+            backdrop-filter: blur(20px);
+            padding: 15px 0;
+            position: fixed;
+            width: 100%;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(0, 255, 255, 0.1);
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+
+        nav ul li {
+            margin-left: 20px;
+        }
+
+        nav ul li a {
+            color: var(--text);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        nav ul li a:hover {
+            color: var(--primary);
+        }
+
+        .hero {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+        }
+
+        .pricing-plans {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            width: 100%;
+        }
+
+        .plan {
+            background: linear-gradient(135deg, rgba(8, 8, 8, 0.8), rgba(3, 3, 3, 0.8));
+            backdrop-filter: blur(30px);
+            border-radius: 15px;
+            padding: 40px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 10px 30px rgba(0, 255, 255, 0.1);
+            transition: all 0.5s ease;
+            border: 1px solid rgba(0, 255, 255, 0.05);
+        }
+
+        .plan:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0, 255, 255, 0.2);
+        }
+
+        .plan h2 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+            color: var(--primary);
+        }
+
+        .plan .price {
+            font-size: 3rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .plan .price span {
+            font-size: 1rem;
+            color: var(--text-secondary);
+        }
+
+        .plan ul {
+            list-style-type: none;
+            padding: 0;
+            margin-bottom: 30px;
+        }
+
+        .plan ul li {
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+
+        .plan ul li::before {
+            content: '✓';
+            color: var(--primary);
+            margin-right: 10px;
+            font-weight: bold;
+        }
+
+        .plan .cta-button {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            color: var(--background);
+            text-align: center;
+            border: none;
+            border-radius: 8px;
+            position: relative;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            font-size: 1rem;
+        }
+
+        .plan .cta-button:hover {
+            opacity: 0.9;
+            transform: translateY(-3px);
+        }
+
+        .background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .background::before, .background::after {
+            content: '';
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            filter: blur(80px);
+        }
+
+        .background::before {
+            top: -150px;
+            left: -150px;
+            background: radial-gradient(circle, rgba(0, 255, 255, 0.1) 0%, transparent 70%);
+            animation: float 20s infinite alternate;
+        }
+
+        .background::after {
+            bottom: -150px;
+            right: -150px;
+            background: radial-gradient(circle, rgba(0, 128, 255, 0.1) 0%, transparent 70%);
+            animation: float 25s infinite alternate-reverse;
+        }
+
+        @keyframes float {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            100% { transform: translate(30px, 30px) rotate(360deg); }
+        }
+
+        @media (max-width: 768px) {
+            .pricing-plans {
+                flex-direction: column;
+                align-items: center;
+            }
+            .plan {
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="background"></div>
+    <header>
+        <nav>
+            <div class="logo">Sync</div>
+            <ul>
+               <li> <a href="sync.html">Home</a></li>
+               <li><a href="syncpurchase.html">Purchase</a></li>
+               <li><a href="syncprices.html">Prices</a></li>
+               <li><a href="syncrawdata.html">Raw Data</a></li>
+               <li><a href="syncprofile.html">Profile</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="container">
+        <section class="hero">
+            <h1>Choose your plan</h1>
+            <p>Unlimited access to all of Syncs features</p>
+        </section>
+
+        <div class="pricing-plans">
+            <div class="plan">
+                <h2>FREE PLAN</h2>
+                <div class="price">$0 <span>/mo</span></div>
+          
+                <ul>
+                    <li>No Decompiler</li>
+                    <li>Link-Vertise System</li>
+                    <li>Level 5</li>
+                    <li>80% UNC</li>
+                    <li>No Multi-Instance Support</li>
+                </ul>
+                <a href="syncpurchase.html" class="cta-button">Get started</a>
+            </div>
+            <div class="plan">
+                <h2>PREMIUM PLAN</h2>
+                <div class="price">$11 <span>/mo</span></div>
+                <ul>
+                    <li>Script Decompiler</li>
+                    <li>No Key System</li>
+                    <li>Level 8</li>
+                    <li>98% UNC</li>
+                    <li>Multi-Instance Support</li>
+                </ul>
+                <a href="syncpurchase.html" class="cta-button">Upgrade Premium</a>
+            </div>
+        </div>
+    </div>
+
+
+</body>
+</html>

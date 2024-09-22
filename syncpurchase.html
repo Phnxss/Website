@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sync Windows Key 1 Month</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+
+        :root {
+            --primary: #00FFFF;
+            --secondary: #0080FF;
+            --background: #030303;
+            --surface: #080808;
+            --text: #FFFFFF;
+            --text-secondary: #A0A0A0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--background);
+            color: var(--text);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 120px 20px 40px; /* Increased top padding */
+            display: flex;
+            justify-content: center;
+            align-items: flex-start; /* Changed from center to flex-start */
+            flex-grow: 1;
+        }
+
+        header {
+            background: rgba(3, 3, 3, 0.8);
+            backdrop-filter: blur(20px);
+            padding: 15px 0;
+            position: fixed;
+            width: 100%;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(0, 255, 255, 0.1);
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+
+        nav ul li {
+            margin-left: 20px;
+        }
+
+        nav ul li a {
+            color: var(--text);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        nav ul li a:hover {
+            color: var(--primary);
+        }
+
+        .product-section {
+            background: linear-gradient(135deg, rgba(8, 8, 8, 0.8), rgba(3, 3, 3, 0.8));
+            backdrop-filter: blur(30px);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 255, 255, 0.1);
+            transition: all 0.5s ease;
+            border: 1px solid rgba(0, 255, 255, 0.05);
+            width: 100%;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+
+        .product-section:hover {
+            box-shadow: 0 15px 40px rgba(0, 255, 255, 0.2);
+            transform: translateY(-5px);
+        }
+
+        .product-image {
+            width: 100%;
+            max-width: 400px;
+            height: 235px;
+            background-color: #1a1a1a;
+            border-color: cyan;
+            border: 1px;
+            border-width: 2px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: bottom;
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 150px;
+            bottom: -130px;
+        }
+
+        .product-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .product-info {
+            width: calc(100% - 420px);
+        }
+
+        .product-title {
+            font-size: 2rem;
+            margin-bottom: 15px;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 700;
+        }
+
+        .product-features {
+            background: rgba(10, 10, 10, 0.5);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        .feature {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+        }
+
+        .feature-icon {
+            width: 16px;
+            height: 16px;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            border-radius: 50%;
+            margin-right: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
+        }
+
+        .feature-icon::before {
+            content: '✓';
+            color: var(--background);
+            font-weight: bold;
+            font-size: 0.7rem;
+        }
+
+        .price {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--primary);
+            margin-bottom: 15px;
+            text-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
+        }
+
+        .price span {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            margin-left: 5px;
+        }
+
+        .stock {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            margin-bottom: 15px;
+        }
+
+        .quantity-selector {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            background: rgba(3, 3, 3, 0.5);
+            border-radius: 8px;
+            padding: 5px;
+            width: fit-content;
+        }
+
+        .quantity-selector button {
+            width: 30px;
+            height: 30px;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            border: none;
+            color: var(--background);
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-radius: 6px;
+        }
+
+        .quantity-selector input {
+            width: 40px;
+            height: 30px;
+            text-align: center;
+            background: transparent;
+            border: none;
+            color: var(--text);
+            margin: 0 5px;
+            font-size: 1rem;
+            font-weight: bold;
+        }
+
+        .action-buttons button {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 10px;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .purchase-button {
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            color: var(--background);
+        }
+
+        .cart-button {
+            background: rgba(0, 255, 255, 0.1);
+            color: var(--primary);
+            border: 1px solid var(--primary);
+        }
+
+        .download-button {
+            background: var(--secondary);
+            color: var(--text);
+        }
+
+        .action-buttons button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 255, 255, 0.2);
+        }
+
+        .product-details {
+            width: 100%;
+            margin-top: 20px;
+            background: rgba(10, 10, 10, 0.5);
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+        .product-details h3 {
+            color: var(--primary);
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+        }
+
+        .product-details ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+
+        .product-details li {
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            font-size: 0.9rem;
+        }
+
+        .product-details li::before {
+            content: '•';
+            color: var(--primary);
+            font-size: 1rem;
+            margin-right: 8px;
+        }
+
+        .background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .background::before, .background::after {
+            content: '';
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            filter: blur(80px);
+        }
+
+        .background::before {
+            top: -150px;
+            left: -150px;
+            background: radial-gradient(circle, rgba(0, 255, 255, 0.1) 0%, transparent 70%);
+            animation: float 20s infinite alternate;
+        }
+
+        .background::after {
+            bottom: -150px;
+            right: -150px;
+            background: radial-gradient(circle, rgba(0, 128, 255, 0.1) 0%, transparent 70%);
+            animation: float 25s infinite alternate-reverse;
+        }
+
+        @keyframes float {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            100% { transform: translate(30px, 30px) rotate(360deg); }
+        }
+
+        @media (max-width: 768px) {
+            .product-image, .product-info {
+                width: 100%;
+            }
+            .container {
+                padding-top: 100px; /* Adjusted for mobile */
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="background"></div>
+    <header>
+        <nav>
+            <div class="logo">Sync</div>
+            <ul>
+            <li><a href="sync.html">Home</a></li>
+            <li><a href="syncpurchase.html">Purchase</a></li>
+            <li><a href="syncprices.html">Prices</a></li>
+            <li> <a href="syncrawdata.html">Raw Data</a></li>
+            <li> <a href="syncprofile.html">Profile</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="container">
+        <section class="product-section">
+            <div class="product-image">
+               <img src="syncmedia/image.png" alt="Sync Windows Key">
+            </div>
+            <div class="product-info">
+                <h1 class="product-title">Sync Windows Key 1 Month</h1>
+                <div class="product-features">
+                    <div class="feature">
+                        <div class="feature-icon"></div>
+                        <span>Paid Decompiler</span>
+                    </div>
+                    <div class="feature">
+                        <div class="feature-icon"></div>
+                        <span>Windows 10 / 11 supported</span>
+                    </div>
+                    <div class="feature">
+                        <div class="feature-icon"></div>
+                        <span>Not Detected</span>
+                    </div>
+                </div>
+                <div class="price">$<span id="totalPrice">11.00</span> <span>Monthly</span></div>
+                <div class="stock">Stock: <span id="stockAmount">100</span></div>
+                <div class="quantity-selector">
+                    <button id="decreaseQuantity">-</button>
+                    <input type="number" id="quantity" value="1" min="1" max="100" readonly>
+                    <button id="increaseQuantity">+</button>
+                </div>
+                <div class="action-buttons">
+                    <button class="purchase-button">Purchase Now</button>
+                    <button class="cart-button">Add To Cart</button>
+                    <button class="download-button">Download</button>
+                </div>
+            </div>
+            <div class="product-details">
+                <h3>Product Details</h3>
+                <ul>
+                    <li>1 Month license for Sync Windows Key</li>
+                    <li>Instant delivery via email</li>
+                    <li>24/7 customer support</li>
+                    <li>Regular updates and improvements</li>
+                    <li>Compatible with latest Roblox versions</li>
+                </ul>
+            </div>
+        </section>
+    </div>
+
+
+</body>
+</html>
+</body>
+</html>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const quantityInput = document.getElementById('quantity');
+            const decreaseBtn = document.getElementById('decreaseQuantity');
+            const increaseBtn = document.getElementById('increaseQuantity');
+            const totalPriceElement = document.getElementById('totalPrice');
+            const stockAmountElement = document.getElementById('stockAmount');
+
+            const pricePerUnit = 11;
+            let currentStock = 100;
+
+            function updatePrice() {
+                const quantity = parseInt(quantityInput.value);
+                const totalPrice = (quantity * pricePerUnit).toFixed(2);
+                totalPriceElement.textContent = totalPrice;
+            }
+
+            function updateStock() {
+                stockAmountElement.textContent = currentStock;
+            }
+
+            function decrease() {
+                const currentQuantity = parseInt(quantityInput.value);
+                if (currentQuantity > 1) {
+                    quantityInput.value = currentQuantity - 1;
+                    currentStock++;
+                    updatePrice();
+                    updateStock();
+                }
+            }
+
+            function increase() {
+                const currentQuantity = parseInt(quantityInput.value);
+                if (currentStock > 0) {
+                    quantityInput.value = currentQuantity + 1;
+                    currentStock--;
+                    updatePrice();
+                    updateStock();
+                }
+            }
+
+            decreaseBtn.addEventListener('click', decrease);
+            increaseBtn.addEventListener('click', increase);
+
+          
+            const buttons = document.querySelectorAll('button');
+            buttons.forEach(button => {
+                button.addEventListener('mouseover', () => {
+                    button.style.transform = 'translateY(-3px)';
+                    button.style.boxShadow = '0 5px 15px rgba(0, 255, 255, 0.2)';
+                });
+                button.addEventListener('mouseout', () => {
+                    button.style.transform = 'translateY(0)';
+                    button.style.boxShadow = 'none';
+                });
+            });
+        });
+    </script>
+</body>
+</html>
